@@ -1,5 +1,7 @@
 # 🚀 FounderVerse AI
 
+**🌍 Deployed Project Link:** [https://founder-verse-ai.vercel.app/](https://founder-verse-ai.vercel.app/)
+
 Validate your startup idea before spending a single dollar. 
 
 **FounderVerse AI** acts as your virtual boardroom, using Google's Gemini AI to analyze your idea, project financials, formulate marketing strategies, and simulate critical business decisions.
