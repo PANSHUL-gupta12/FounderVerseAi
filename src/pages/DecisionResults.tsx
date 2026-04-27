@@ -47,6 +47,16 @@ const DecisionResults = () => {
     return "text-destructive";
   };
 
+  const getDangerColor = (level: string) => {
+    switch (level?.toLowerCase()) {
+      case "low": return "bg-emerald-500/20 text-emerald-400 border-emerald-500/30";
+      case "medium": return "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
+      case "high": return "bg-orange-500/20 text-orange-400 border-orange-500/30";
+      case "critical": return "bg-destructive/20 text-destructive border-destructive/30";
+      default: return "bg-primary/20 text-primary border-primary/30";
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -140,9 +150,14 @@ const DecisionResults = () => {
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className={`text-lg font-bold ${getProbabilityColor(o.successProbability)}`}>
-                      {o.successProbability}%
-                    </span>
+                    <div className="flex flex-col items-end mr-2">
+                      <span className={`text-lg font-bold ${getProbabilityColor(o.successProbability)}`}>
+                        {o.successProbability}%
+                      </span>
+                      <span className={`mt-1 rounded border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${getDangerColor(o.dangerLevel)}`}>
+                        Danger: {o.dangerLevel}
+                      </span>
+                    </div>
                     {isExpanded ? (
                       <ChevronUp className="h-5 w-5 text-muted-foreground" />
                     ) : (

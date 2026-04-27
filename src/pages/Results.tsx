@@ -23,7 +23,7 @@ const Results = () => {
   const navigate = useNavigate();
   if (!location.state) return <Navigate to="/simulate" replace />;
 
-  const { aiResults, formData } = location.state as any;
+  const { aiResults, formData, startupId } = location.state as any;
 
   const { metrics, financials, boardroom, marketing, verdict } = aiResults;
 
@@ -163,7 +163,7 @@ const Results = () => {
         {/* Decision Simulator CTA */}
         <motion.div className="mt-8 flex justify-center" {...fade(0.35)}>
           <button
-            onClick={() => navigate("/decision-simulator", { state: { formData } })}
+            onClick={() => navigate("/decision-simulator", { state: { formData, startupId } })}
             className="gradient-btn flex items-center gap-2 rounded-xl px-8 py-3.5 text-base"
           >
             <Zap className="h-5 w-5" />

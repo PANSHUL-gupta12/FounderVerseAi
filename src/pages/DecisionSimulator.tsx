@@ -3,7 +3,8 @@ import { useLocation, Navigate, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Loader2, Zap, Building2, Users, DollarSign, GitBranch } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
-import { generateDecisionOutcomes } from "@/data/mockDecisionOutcomes";
+import { simulateDecision } from "@/lib/gemini";
+import { supabase } from "@/lib/supabase";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -19,6 +20,7 @@ const DecisionSimulator = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const formData = (location.state as any)?.formData;
+  const startupId = (location.state as any)?.startupId;
 
   const [loading, setLoading] = useState(false);
   const [loadingMsg, setLoadingMsg] = useState("Analyzing your decision…");
@@ -39,7 +41,7 @@ const DecisionSimulator = () => {
     "w-full rounded-xl border border-border bg-secondary/50 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary/50 focus:outline-none focus:ring-1 focus:ring-primary/30 transition-colors";
   const labelClass = "mb-1.5 flex items-center gap-2 text-sm font-medium text-foreground";
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setLoadingMsg("Analyzing your decision…");
@@ -56,9 +58,8 @@ const DecisionSimulator = () => {
       setLoadingMsg(msgs[i]);
     }, 2500);
 
-    setTimeout(() => {
-      clearInterval(interval);
-      const outcomes = generateDecisionOutcomes({
+    try {
+      const outcomes = await simulateDecision({
         idea: formData.idea,
         currentState: form.currentState,
         revenue: form.revenue,
@@ -66,10 +67,33 @@ const DecisionSimulator = () => {
         stage: form.stage,
         decision: form.decision,
       });
+
+      clearInterval(interval);
+      
+      if (startupId) {
+        try {
+          await supabase.from('decisions').insert([{
+            startup_id: startupId,
+            current_state: form.currentState,
+            revenue: form.revenue ? parseFloat(form.revenue) : 0,
+            team_size: form.teamSize ? parseInt(form.teamSize) : 0,
+            stage: form.stage,
+            decision_text: form.decision,
+            outcomes: outcomes
+          }]);
+        } catch (e) {
+          console.error("Failed to save decision:", e);
+        }
+      }
+
       navigate("/decision-results", {
         state: { outcomes, decision: form.decision, formData, startupState: form },
       });
-    }, 3500);
+    } catch (err) {
+      clearInterval(interval);
+      setLoading(false);
+      alert(`Simulation failed: ${err instanceof Error ? err.message : "Unknown error"}. Please try again.`);
+    }
   };
 
   if (loading) {

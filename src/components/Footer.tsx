@@ -16,7 +16,7 @@ const Footer = () => (
           <span>Contact</span>
         </div>
         <p className="text-xs text-muted-foreground">
-          Powered by AI & n8n · © 2026
+          Powered by Gemini AI · © 2026
         </p>
       </div>
     </div>

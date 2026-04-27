@@ -1,8 +1,10 @@
 import { Link, useLocation } from "react-router-dom";
-import { Brain } from "lucide-react";
+import { Brain, User } from "lucide-react";
+import { useAuth } from "@/components/AuthProvider";
 
 const Navbar = () => {
   const location = useLocation();
+  const { user } = useAuth();
   const isHome = location.pathname === "/";
 
   return (
@@ -19,8 +21,18 @@ const Navbar = () => {
 
         <div className="flex items-center gap-6">
           {!isHome && (
-            <Link to="/" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+            <Link to="/" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
               Home
+            </Link>
+          )}
+          {user ? (
+            <Link to="/profile" className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+              <User className="h-4 w-4" />
+              Profile
+            </Link>
+          ) : (
+            <Link to="/auth" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+              Sign In
             </Link>
           )}
           <Link
