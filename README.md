@@ -47,7 +47,7 @@ Never lose a great idea. Through Supabase Authentication and Row Level Security,
 2. **Setup Environment Variables**  
    Rename `.env.example` to `.env` and add your API keys:
    ```env
-   VITE_GEMINI_API_KEY="your_gemini_api_key"
+   GEMINI_API_KEY="your_gemini_api_key"
    VITE_SUPABASE_URL="https://your-project-id.supabase.co"
    VITE_SUPABASE_PUBLISHABLE_KEY="your_supabase_anon_key"
    ```
@@ -63,4 +63,4 @@ Never lose a great idea. Through Supabase Authentication and Row Level Security,
 ---
 
 ## 🌍 Deployment
-This project is ready to be deployed on **Vercel** or **Netlify**. Just link your GitHub repository, ensure the build command is `npm run build`, and add your three `VITE_` keys in the deployment environment settings!
+This project is ready to be deployed on **Vercel** or **Netlify**. Just link your GitHub repository, ensure the build command is `npm run build`, and add your environment variables (`GEMINI_API_KEY`, `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`) in the deployment environment settings!
