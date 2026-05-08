@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { Loader2, Zap, Building2, Users, DollarSign, GitBranch } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { simulateDecision } from "@/lib/gemini";
-import { supabase } from "@/lib/supabase";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -72,17 +71,21 @@ const DecisionSimulator = () => {
       
       if (startupId) {
         try {
-          await supabase.from('decisions').insert([{
+          const savedDecisions = JSON.parse(localStorage.getItem("savedDecisions") || "[]");
+          savedDecisions.push({
+            id: crypto.randomUUID(),
             startup_id: startupId,
             current_state: form.currentState,
             revenue: form.revenue ? parseFloat(form.revenue) : 0,
             team_size: form.teamSize ? parseInt(form.teamSize) : 0,
             stage: form.stage,
             decision_text: form.decision,
-            outcomes: outcomes
-          }]);
+            outcomes: outcomes,
+            created_at: new Date().toISOString()
+          });
+          localStorage.setItem("savedDecisions", JSON.stringify(savedDecisions));
         } catch (e) {
-          console.error("Failed to save decision:", e);
+          console.error("Failed to save decision to localStorage:", e);
         }
       }
 

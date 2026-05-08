@@ -8,32 +8,25 @@ import Simulate from "./pages/Simulate";
 import Results from "./pages/Results";
 import DecisionSimulator from "./pages/DecisionSimulator";
 import DecisionResults from "./pages/DecisionResults";
-import Auth from "./pages/Auth";
-import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
-import { AuthProvider } from "./components/AuthProvider";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <AuthProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/simulate" element={<Simulate />} />
-            <Route path="/results" element={<Results />} />
-            <Route path="/decision-simulator" element={<DecisionSimulator />} />
-            <Route path="/decision-results" element={<DecisionResults />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </AuthProvider>
+      <Toaster />
+      <Sonner />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/simulate" element={<Simulate />} />
+          <Route path="/results" element={<Results />} />
+          <Route path="/decision-simulator" element={<DecisionSimulator />} />
+          <Route path="/decision-results" element={<DecisionResults />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
 );

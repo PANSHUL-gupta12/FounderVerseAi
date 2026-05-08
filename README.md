@@ -25,13 +25,13 @@ Instead of guessing your budget allocation, the AI Strategy Developer generates:
 *   **Go-To-Market (GTM) Strategy**: A tailored marketing breakdown suggesting exactly which platforms to target based on your specific audience and budget.
 *   **Final Verdict**: A harsh but fair concluding assessment providing a 30-day roadmap and your top 3 critical risks.
 
-### 🔒 Secure Cloud Profiles
-Never lose a great idea. Through Supabase Authentication and Row Level Security, all of your simulated startups, financial models, and decision histories are securely saved to your private dashboard. Log in to revisit or iterate on your strategies at any time.
+### 💾 Local Device Storage
+Never lose a great idea. All of your simulated startups, financial models, and decision histories are securely saved directly to your browser's local storage. This ensures complete privacy and lets you revisit or iterate on your strategies at any time without needing an account.
 
 ## 🛠 Tech Stack
 - **Frontend:** React, TypeScript, Vite, Tailwind CSS
-- **AI:** Google Gemini API (`gemini-2.5-flash`)
-- **Database & Auth:** Supabase
+- **AI:** Google Gemini REST API (`gemini-2.5-flash`)
+- **Data Persistence:** Browser `localStorage`
 
 ---
 
@@ -45,17 +45,12 @@ Never lose a great idea. Through Supabase Authentication and Row Level Security,
    ```
 
 2. **Setup Environment Variables**  
-   Rename `.env.example` to `.env` and add your API keys:
+   Create a `.env` file in the root directory and add your API key:
    ```env
-   GEMINI_API_KEY="your_gemini_api_key"
-   VITE_SUPABASE_URL="https://your-project-id.supabase.co"
-   VITE_SUPABASE_PUBLISHABLE_KEY="your_supabase_anon_key"
+   VITE_GEMINI_API_KEY="your_gemini_api_key_here"
    ```
 
-3. **Initialize Database**  
-   Copy the contents of `schema.sql` and run it in your **Supabase SQL Editor** to set up the necessary tables and security rules. *(Tip: Turn off "Confirm Email" in Supabase Auth settings to test logins instantly).*
-
-4. **Run the App**
+3. **Run the App**
    ```bash
    npm run dev
    ```
@@ -63,4 +58,11 @@ Never lose a great idea. Through Supabase Authentication and Row Level Security,
 ---
 
 ## 🌍 Deployment
-This project is ready to be deployed on **Vercel** or **Netlify**. Just link your GitHub repository, ensure the build command is `npm run build`, and add your environment variables (`GEMINI_API_KEY`, `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`) in the deployment environment settings!
+This project is ready to be deployed on platforms like **Vercel** or **Netlify**. 
+
+1. Link your GitHub repository.
+2. Ensure the build command is `npm run build`.
+3. Add your environment variable (`VITE_GEMINI_API_KEY`) in the deployment dashboard's environment settings.
+4. Deploy!
+
+*(Note: Because the API key is prefixed with `VITE_` and runs purely on the frontend, your key will be exposed in the browser network tab. If deploying publicly, ensure you set billing limits or domain restrictions on your Google Cloud Console to prevent abuse.)*

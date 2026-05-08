@@ -1,48 +1,27 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Rocket, Clock, Zap, ArrowRight, Loader2 } from "lucide-react";
-import { supabase } from "@/lib/supabase";
-import { useAuth } from "@/components/AuthProvider";
 import { motion } from "framer-motion";
 
 export default function Dashboard() {
-  const { user } = useAuth();
   const [startups, setStartups] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    async function fetchStartups() {
-      if (!user) {
-        setLoading(false);
-        return;
-      }
+    // Load startups from localStorage instead of Supabase
+    const savedStartups = JSON.parse(localStorage.getItem("savedStartups") || "[]");
+    
+    // Sort by created_at descending if available
+    savedStartups.sort((a: any, b: any) => {
+      const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
+      const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
+      return dateB - dateA;
+    });
 
-      // Find user's orgs
-      const { data: orgData } = await supabase
-        .from('organization_members')
-        .select('org_id')
-        .eq('user_id', user.id);
-
-      const orgIds = orgData?.map((o) => o.org_id) || [];
-
-      // Fetch startups matching user_id or any of their org_ids
-      let query = supabase.from("startups").select("*");
-      if (orgIds.length > 0) {
-        query = query.or(`user_id.eq.${user.id},org_id.in.(${orgIds.join(',')})`);
-      } else {
-        query = query.eq("user_id", user.id);
-      }
-
-      const { data, error } = await query.order("created_at", { ascending: false });
-
-      if (!error && data) {
-        setStartups(data);
-      }
-      setLoading(false);
-    }
-    fetchStartups();
-  }, [user]);
+    setStartups(savedStartups);
+    setLoading(false);
+  }, []);
 
   if (loading) {
     return (

@@ -4,11 +4,8 @@ import { motion } from "framer-motion";
 import { Rocket, Loader2 } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { simulateStartup } from "@/lib/gemini";
-import { supabase } from "@/lib/supabase";
-import { useAuth } from "@/components/AuthProvider";
 
 const SimulationForm = () => {
-  const { user } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [loadingMsg, setLoadingMsg] = useState("AI Boardroom is discussing your idea…");
@@ -52,22 +49,11 @@ const SimulationForm = () => {
         throw new Error("Incomplete data from AI simulation");
       }
 
-      let startupId = null;
+      const startupId = crypto.randomUUID();
       try {
-        let orgId = null;
-        if (user) {
-          const { data: orgData } = await supabase
-            .from('organization_members')
-            .select('org_id')
-            .eq('user_id', user.id)
-            .limit(1)
-            .single();
-          if (orgData) orgId = orgData.org_id;
-        }
-
-        const { data: dbData, error } = await supabase.from('startups').insert([{
-          user_id: user?.id || null,
-          org_id: orgId,
+        const savedStartups = JSON.parse(localStorage.getItem("savedStartups") || "[]");
+        const newStartup = {
+          id: startupId,
           idea: form.idea,
           initial_budget: form.budget ? parseFloat(form.budget) : 0,
           marketing_budget: form.marketingBudget ? parseFloat(form.marketingBudget) : 0,
@@ -75,16 +61,13 @@ const SimulationForm = () => {
           pricing_model: form.pricing,
           timeline: form.timeline,
           risk_appetite: risk[0],
-          analysis_data: data
-        }]).select('id').single();
-
-        if (error) {
-          console.error("Supabase insert error:", error);
-        } else if (dbData) {
-          startupId = dbData.id;
-        }
+          analysis_data: data,
+          created_at: new Date().toISOString()
+        };
+        savedStartups.push(newStartup);
+        localStorage.setItem("savedStartups", JSON.stringify(savedStartups));
       } catch (e) {
-        console.error("Error saving to db:", e);
+        console.error("Error saving to localStorage:", e);
       }
 
       navigate("/results", { state: { aiResults: data, formData: form, startupId } });
