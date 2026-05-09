@@ -157,8 +157,8 @@ Generate 3 realistic outcomes (Best Case, Most Likely, Worst Case) of this decis
     
     return res.status(400).json({ error: "Invalid simulation type" });
 
-  } catch (error) {
+  } catch (error: any) {
     console.error("Gemini API Error:", error);
-    return res.status(500).json({ error: "Failed to generate simulation" });
+    return res.status(500).json({ error: error.message || "Failed to generate simulation" });
   }
 }
