@@ -45,9 +45,10 @@ Never lose a great idea. All of your simulated startups, financial models, and d
    ```
 
 2. **Setup Environment Variables**  
-   Create a `.env` file in the root directory and add your API key:
+   Create a `.env` file in the root directory and add your API key. (For local development with Vite, prefix it with `VITE_`. For production deployment with Serverless Functions, use `GEMINI_API_KEY`):
    ```env
    VITE_GEMINI_API_KEY="your_gemini_api_key_here"
+   GEMINI_API_KEY="your_gemini_api_key_here"
    ```
 
 3. **Run the App**
@@ -58,11 +59,11 @@ Never lose a great idea. All of your simulated startups, financial models, and d
 ---
 
 ## 🌍 Deployment
-This project is ready to be deployed on platforms like **Vercel** or **Netlify**. 
+This project is ready to be deployed on platforms like **Vercel**. 
 
 1. Link your GitHub repository.
 2. Ensure the build command is `npm run build`.
-3. Add your environment variable (`VITE_GEMINI_API_KEY`) in the deployment dashboard's environment settings.
+3. Add your environment variable (`GEMINI_API_KEY`) in the deployment dashboard's environment settings. (Do NOT use the `VITE_` prefix for the deployment variable, so it remains hidden on the secure backend).
 4. Deploy!
 
-*(Note: Because the API key is prefixed with `VITE_` and runs purely on the frontend, your key will be exposed in the browser network tab. If deploying publicly, ensure you set billing limits or domain restrictions on your Google Cloud Console to prevent abuse.)*
+*(Note: The AI simulation runs via a secure Serverless Function (`api/simulate.ts`), which completely hides your API key from the frontend and protects your quota from abuse!)*
